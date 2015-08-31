@@ -149,6 +149,33 @@ class HercView extends HercAbstract
         );
     }
 
+    function AddPostColumns( $columns )
+    {
+        $new_columns = $this->PostsColumns();
+
+        return array_merge( $columns, $new_columns );
+    }
+
+    function PostColumnValues( $colname, $post_id )
+    {
+        $meta_data = $this->Model( $this->CurrentSlug() )->GetMeta( $post_id );
+
+        $custom_columns = $this->PostsColumns();
+
+        if( !empty( $custom_columns[ $colname ] ) )
+        {
+            $method_name = $this->UpperCamelCaseIt( $colname ) . 'Filter';
+
+            if( method_exists( $this, $method_name ) )
+                if( !empty( $meta_data[ $colname ] ) )
+                    echo $this->$method_name( $meta_data[ $colname ] );
+                else
+                    echo $this->$method_name( '' );
+            else
+                echo $meta_data[ $colname ];
+        }
+    }
+
     function Initialize()
     {
         if( $this->type == 'metabox' && !empty( $this->metabox_positions ) )
@@ -159,5 +186,16 @@ class HercView extends HercAbstract
             add_action( 'admin_menu', array( $this, 'Menu' ) );
         elseif( $this->type == 'options_page' )
             add_action( 'admin_menu', array( $this, 'AddOptionsPage' ) );
+
+        if( method_exists( $this, 'PostsColumns' ) )
+        {
+            if( property_exists( $this, 'post_type' )  && !empty( $this->post_type ) )
+                $post_type = $this->post_type;
+            else
+                $post_type = 'post';
+
+            add_filter('manage_edit-' . $post_type . '_columns', array($this, 'AddPostColumns'));
+            add_action('manage_' . $post_type . 's_custom_column', array($this, 'PostColumnValues'), 10, 2);
+        }
     }
 }

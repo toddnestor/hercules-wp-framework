@@ -16,10 +16,7 @@ class HercModel extends HercAbstract
     function RegisterPostMetaSave( $post_id )
     {
         if( !empty( $_POST[ $this->class_name ] ) )
-            if( is_array( $_POST[ $this->class_name ] ) )
-                update_post_meta( $post_id, $this->class_name, serialize( $_POST[ $this->class_name ] ) );
-            else
-                update_post_meta( $post_id, $this->class_name, $_POST[ $this->class_name ] );
+            update_post_meta( $post_id, $this->class_name, $_POST[ $this->class_name ] );
     }
 
     function Initialize()
