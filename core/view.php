@@ -70,7 +70,7 @@ class HercView extends HercAbstract
 
     function EnqueueBootstrap()
     {
-        $this->EnqueueStyleSheet( 'framework/assets/css/bootstrap.css', sanitize_title( $this->GetPluginFolderName() . '_bootstrap' ) );
+        $this->EnqueueStyleSheet( 'assets/css/bootstrap.css', sanitize_title( $this->GetPluginFolderName() . '_bootstrap' ) );
     }
 
     function IncludeBootstrap()

@@ -155,7 +155,7 @@ abstract class HercAbstract
 
     function GetPluginDirectory()
     {
-        return dirname( dirname( dirname( __FILE__ ) ) );
+        return dirname( dirname( __FILE__ ) );
     }
 
     function GetPluginFolderName()
