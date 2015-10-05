@@ -9,6 +9,8 @@ class HercView extends HercAbstract
         $this->menu_name  = !property_exists( $this, 'menu_name' ) || empty( $this->menu_name ) ? $this->name : $this->menu_name;
         $this->class_name = !property_exists( $this, 'class_name' ) || empty( $this->class_name ) ? __CLASS__ : $this->class_name;
         $this->model      = !property_exists( $this, 'model' ) || empty( $this->model ) ? $this->CurrentSlug() : $this->model;
+
+        add_action( 'wp_enqueue_scripts', array( $this, 'RegisterAllScripts' ) );
     }
 
     function Render( $data = array(), $return = false )
@@ -58,7 +60,35 @@ class HercView extends HercAbstract
             return 'name="' . $this->class_name . '[' . $matches[ 1 ] . ']"';
     }
 
-    function EnqueueScript( $script )
+    function EnqueueScript( $handle = '', $style, $dependencies = array() )
+    {
+        wp_enqueue_script( ( empty( $handle ) ? __CLASS__ . '_' . sanitize_title( $style ) : $handle ), $this->GetUrl( $style ), $dependencies );
+    }
+
+    function RegisterScript( $style, $handle = '', $dependencies = array() )
+    {
+        wp_register_script( $style, $handle, $dependencies );
+    }
+
+    function RegisterAllScripts()
+    {
+        if( is_dir( $this->directory . DIRECTORY_SEPARATOR . 'js' ) )
+            $scripts = scandir( $this->directory . DIRECTORY_SEPARATOR . 'js' );
+
+        if( !empty( $scripts ) )
+        {
+            foreach( $scripts as $key=>$val )
+            {
+                if( $val == '.' || $val == '..' )
+                    continue;
+
+                if( strpos( $val, '.js' ) !== false )
+                    $this->RegisterScript( 'herc-' . str_replace('.js','',$val), $this->GetUrl( str_replace( (property_exists( $this, 'plugin_directory' ) ? $this->plugin_directory : dirname( dirname( dirname( __FILE__ ) ) ) ) . DIRECTORY_SEPARATOR, '', $this->directory . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $val ) ) );
+            }
+        }
+    }
+
+    function RegisterAllStyles()
     {
 
     }
@@ -66,6 +96,11 @@ class HercView extends HercAbstract
     function EnqueueStyleSheet( $style, $handle = '' )
     {
         wp_enqueue_style( ( empty( $handle ) ? __CLASS__ . '_' . sanitize_title( $style ) : $handle ), $this->GetUrl( $style ) );
+    }
+
+    function RegisterStyleSheet( $style, $handle = '' )
+    {
+        wp_register_style( $handle, $style, array() );
     }
 
     function EnqueueBootstrap()

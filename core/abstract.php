@@ -148,14 +148,17 @@ abstract class HercAbstract
         return $this->$object;
     }
 
-    function GetUrl( $file = '' )
+    function GetUrl( $file = '', $from_plugin_folder = true )
     {
-        return plugins_url( $this->GetPluginFolderName() . '/' . $file, $this->GetPluginDirectory() );
+        return plugins_url( ( $from_plugin_folder ? $this->GetPluginFolderName() . '/' . $file : $file ), $this->GetPluginDirectory() );
     }
 
     function GetPluginDirectory()
     {
-        return dirname( dirname( __FILE__ ) );
+        if( property_exists( $this, 'plugin_directory' ) )
+            return $this->plugin_directory;
+        else
+            return dirname( dirname( __FILE__ ) );
     }
 
     function GetPluginFolderName()
