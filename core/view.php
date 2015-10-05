@@ -172,6 +172,11 @@ class HercView extends HercAbstract
         }
     }
 
+    public function RegisterShortcode( $attributes = array() )
+    {
+        return $this->Render( $attributes, true );
+    }
+
     function Initialize()
     {
         if( $this->type == 'metabox' && !empty( $this->metabox_positions ) )
@@ -182,6 +187,8 @@ class HercView extends HercAbstract
             add_action( 'admin_menu', array( $this, 'Menu' ) );
         elseif( $this->type == 'options_page' )
             add_action( 'admin_menu', array( $this, 'AddOptionsPage' ) );
+        elseif( $this->type == 'shortcode' )
+            add_shortcode( property_exists( $this, 'shortcode' ) ? $this->shortcode : $this->class_name, array( $this, 'RegisterShortcode' ) );
 
         if( method_exists( $this, 'PostsColumns' ) )
         {
