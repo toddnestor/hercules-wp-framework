@@ -15,6 +15,7 @@ class HercView extends HercAbstract
     {
         if( !is_bool( $return ) )
             $return = false;
+
         if( !empty( $data ) )
         {
             if( is_object( $data ) && property_exists( $data, 'post_title' ) && property_exists( $data, 'ID' ) )
@@ -51,7 +52,10 @@ class HercView extends HercAbstract
 
     function AddClassNameToPostNames( $matches )
     {
-        return 'name="' . $this->Model( $this->CurrentSlug() )->class_name . '[' . $matches[ 1 ] . ']"';
+        if( $this->Model( $this->CurrentSlug() ) )
+            return 'name="' . $this->Model( $this->CurrentSlug() )->class_name . '[' . $matches[ 1 ] . ']"';
+        else
+            return 'name="' . $this->class_name . '[' . $matches[ 1 ] . ']"';
     }
 
     function EnqueueScript( $script )
@@ -66,7 +70,7 @@ class HercView extends HercAbstract
 
     function EnqueueBootstrap()
     {
-        $this->EnqueueStyleSheet( 'framework/assets/css/bootstrap.css', sanitize_title( $this->GetPluginFolderName() . '_bootstrap' ) );
+        $this->EnqueueStyleSheet( 'assets/css/bootstrap.css', sanitize_title( $this->GetPluginFolderName() . '_bootstrap' ) );
     }
 
     function IncludeBootstrap()
@@ -88,7 +92,7 @@ class HercView extends HercAbstract
                 if( empty( $val[ 'priority' ] ) )
                     $val[ 'position' ] = 'default';
 
-                add_meta_box( 'metabox_' . __CLASS__, $this->name, array( $this, 'Render' ), $val[ 'post_type' ], $val[ 'position' ], $val[ 'priority' ] );
+                add_meta_box( 'metabox_' . $this->class_name, $this->name, array( $this, 'Render' ), $val[ 'post_type' ], $val[ 'position' ], $val[ 'priority' ] );
             }
         }
     }
