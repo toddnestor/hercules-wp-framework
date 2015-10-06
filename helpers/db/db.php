@@ -18,7 +18,7 @@ class HercHelper_Db extends HercHelper
     {
         require_once( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php' );
 
-        $this->db = WeDevs\ORM\Eloquent\Database::instance();
+//        $this->db = \WeDevs\ORM\Eloquent\Database::instance();
 
         $this->CreateMigrationsTable();
     }
@@ -31,10 +31,10 @@ class HercHelper_Db extends HercHelper
 
             $capsule->addConnection(array(
                 'driver'    => 'mysql',
-                'host'      => 'localhost',
-                'database'  => 'wordpress',
-                'username'  => 'root',
-                'password'  => 'hotties',
+                'host'      => DB_HOST,
+                'database'  => DB_NAME,
+                'username'  => DB_USER,
+                'password'  => DB_PASSWORD,
                 'charset'   => 'utf8',
                 'collation' => 'utf8_unicode_ci',
                 'prefix'    => '',
