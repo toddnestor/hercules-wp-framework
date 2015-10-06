@@ -10,7 +10,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use WeDevs\ORM\Eloquent\Database;;
+use WeDevs\ORM\Eloquent\Database;
 
 class HercHelper_Db extends HercHelper
 {
@@ -18,7 +18,7 @@ class HercHelper_Db extends HercHelper
     {
         require_once( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php' );
 
-        $this->db = \WeDevs\ORM\Eloquent\Database::instance();
+        $this->db = WeDevs\ORM\Eloquent\Database::instance();
 
         $this->CreateMigrationsTable();
     }
