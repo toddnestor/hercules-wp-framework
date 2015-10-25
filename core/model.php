@@ -21,8 +21,11 @@ class HercModel extends HercAbstract
 
     function Initialize()
     {
-        if( $this->View( $this->CurrentSlug() )->type == 'metabox' && !empty( $this->View( $this->CurrentSlug() )->metabox_positions ) )
-            add_action( 'save_post', array( $this, 'RegisterPostMetaSave' ) );
+        if( $this->View( $this->CurrentSlug() ) || ( property_exists( $this, 'metabox' ) && $this->metabox == true ) )
+        {
+            if ( ( property_exists( $this, 'metabox' ) && $this->metabox == true ) || ( $this->View( $this->CurrentSlug() )->type == 'metabox' && !empty( $this->View( $this->CurrentSlug() )->metabox_positions ) ) )
+                add_action('save_post', array($this, 'RegisterPostMetaSave'));
+        }
     }
 
     function GetMeta( $post_id )

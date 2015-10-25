@@ -21,7 +21,10 @@ class HercView extends HercAbstract
         if( !empty( $data ) )
         {
             if( is_object( $data ) && property_exists( $data, 'post_title' ) && property_exists( $data, 'ID' ) )
-                $meta_data = $this->Model( $this->CurrentSlug() )->GetMeta( $data->ID );
+            {
+                $slug = property_exists( $this, 'model' ) && !empty( $this->model ) ? $this->Model( $this->model )->CurrentSlug() : $this->CurrentSlug();
+                $meta_data = $this->Model( $slug )->GetMeta($data->ID);
+            }
 
             if( !array( $meta_data ) )
                 $meta_data = array( $meta_data );
@@ -54,8 +57,9 @@ class HercView extends HercAbstract
 
     function AddClassNameToPostNames( $matches )
     {
-        if( $this->Model( $this->CurrentSlug() ) )
-            return 'name="' . $this->Model( $this->CurrentSlug() )->class_name . '[' . $matches[ 1 ] . ']"';
+        $slug = property_exists( $this, 'model' ) && !empty( $this->model ) ? $this->Model( $this->model )->CurrentSlug() : $this->CurrentSlug();
+        if( $this->Model( $slug ) )
+            return 'name="' . $this->Model( $slug )->class_name . '[' . $matches[ 1 ] . ']"';
         else
             return 'name="' . $this->class_name . '[' . $matches[ 1 ] . ']"';
     }
@@ -126,7 +130,8 @@ class HercView extends HercAbstract
 
     function RegisterMetaboxes()
     {
-        $this->data[ 'class_name' ] = $this->Model( $this->CurrentSlug() )->class_name;
+        $slug = property_exists( $this, 'model' ) && !empty( $this->model ) ? $this->Model( $this->model )->CurrentSlug() : $this->CurrentSlug();
+        $this->data[ 'class_name' ] = $this->Model( $slug )->class_name;
 
         foreach( $this->metabox_positions as $key => $val )
         {
@@ -169,7 +174,7 @@ class HercView extends HercAbstract
 
             if( !empty( $post ) && is_object( $post ) && property_exists( $post, 'ID' ) )
             {
-                $meta_data = $this->Model( 'post-settings' )->GetMeta( $post->ID );
+                $meta_data = $this->Model( $this->model )->GetMeta( $post->ID );
 
                 if( !is_array( $meta_data ) )
                     $meta_data = array( $meta_data );
@@ -190,7 +195,21 @@ class HercView extends HercAbstract
             $this->name,
             $this->menu_name,
             ( property_exists( $this, 'capability' ) && !empty( $this->capability ) ? $this->capability : 'manage_options' ),
-            $this->class_name, array( $this, 'Render' )
+            $this->class_name,
+            array( $this, 'Render' )
+        );
+    }
+
+    function AddAdminPage()
+    {
+        add_menu_page(
+            $this->name,
+            $this->menu_name,
+            ( property_exists( $this, 'capability' ) && !empty( $this->capability ) ? $this->capability : 'manage_options' ),
+            $this->class_name,
+            array( $this, 'Render' ),
+            ( property_exists( $this, 'icon' ) && !empty( $this->icon ) ? $this->icon : '' ),
+            ( property_exists( $this, 'priority' ) ? $this->priority : false )
         );
     }
 
@@ -236,6 +255,8 @@ class HercView extends HercAbstract
             add_action( 'admin_menu', array( $this, 'Menu' ) );
         elseif( $this->type == 'options_page' )
             add_action( 'admin_menu', array( $this, 'AddOptionsPage' ) );
+        elseif( $this->type == 'admin_page' )
+            add_action( 'admin_menu', array( $this, 'AddAdminPage' ) );
         elseif( $this->type == 'shortcode' )
             add_shortcode( property_exists( $this, 'shortcode' ) ? $this->shortcode : $this->class_name, array( $this, 'RegisterShortcode' ) );
 
