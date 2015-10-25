@@ -5,6 +5,9 @@
  * Date: 7/22/2015
  * Time: 12:14 PM
  */
+
+require_once( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php' );
+
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 use Illuminate\Support\Facades\Schema;
@@ -16,8 +19,6 @@ class HercHelper_Db extends HercHelper
 {
     function __construct()
     {
-        require_once( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php' );
-
         $this->db = \WeDevs\ORM\Eloquent\Database::instance();
 
         $this->CreateMigrationsTable();
