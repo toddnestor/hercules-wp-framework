@@ -222,7 +222,8 @@ class HercView extends HercAbstract
 
     function PostColumnValues( $colname, $post_id )
     {
-        $meta_data = $this->Model( $this->CurrentSlug() )->GetMeta( $post_id );
+        $slug = property_exists( $this, 'model' ) && !empty( $this->model ) ? $this->Model( $this->model )->CurrentSlug() : $this->CurrentSlug();
+        $meta_data = $this->Model( $slug )->GetMeta( $post_id );
 
         $custom_columns = $this->PostsColumns();
 
