@@ -97,7 +97,7 @@ class HercHelper_Db extends HercHelper
         {
             global $wpdb;
 
-            $table_name = $wpdb->prefix . 'migrations';
+            $table_name = $wpdb->prefix . 'herc_migrations';
 
             $capsule = new Capsule;
 
