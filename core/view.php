@@ -149,7 +149,9 @@ class HercView extends HercAbstract
 
     function PostFilter( $content )
     {
-        if( method_exists( $this, 'GenerateData' ) && ( !property_exists( $this, 'posts_data_generated' ) || $this->posts_data_generated != true ) )
+        global $post;
+
+        if( method_exists( $this, 'GenerateData' ) && ( !property_exists( $this, 'posts_data_generated' ) || $this->posts_data_generated != $post->ID ) )
             $this->GenerateData();
 
         $html = $this->Render( array(), true );
@@ -174,6 +176,9 @@ class HercView extends HercAbstract
 
             if( !empty( $post ) && is_object( $post ) && property_exists( $post, 'ID' ) )
             {
+                if( property_exists( $this, 'posts_data_generated' ) && $this->posts_data_generated != $post->ID )
+                    $this->data = array();
+                
                 $meta_data = $this->Model( $this->model )->GetMeta( $post->ID );
 
                 if( !is_array( $meta_data ) )
@@ -186,7 +191,7 @@ class HercView extends HercAbstract
             }
         }
 
-        $this->posts_data_generated = true;
+        $this->posts_data_generated = $post->ID;
     }
 
     function AddOptionsPage()
