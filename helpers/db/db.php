@@ -19,7 +19,7 @@ class HercHelper_Db extends HercHelper
 {
     function __construct()
     {
-        $this->db = \WeDevs\ORM\Eloquent\Database::instance();
+        $this->db = Database::instance();
 
         $this->CreateMigrationsTable();
         $this->LoadModels();
