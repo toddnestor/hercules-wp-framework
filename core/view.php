@@ -8,7 +8,7 @@ class HercView extends HercAbstract
         $this->name       = !property_exists( $this, 'name' ) || empty( $this->name ) ? '' : $this->name;
         $this->menu_name  = !property_exists( $this, 'menu_name' ) || empty( $this->menu_name ) ? $this->name : $this->menu_name;
         $this->class_name = !property_exists( $this, 'class_name' ) || empty( $this->class_name ) ? __CLASS__ : $this->class_name;
-        $this->model      = !property_exists( $this, 'model' ) || empty( $this->model ) ? $this->CurrentSlug() : $this->model;
+        $this->model      = !property_exists( $this, 'model' ) || empty( $this->model ) ? ( $this->Model(  $this->CurrentSlug() ) ? $this->CurrentSlug() : false ) : $this->model;
 
         add_action( 'wp_enqueue_scripts', array( $this, 'RegisterAllScripts' ) );
     }
@@ -34,6 +34,9 @@ class HercView extends HercAbstract
 
             $this->data = array_merge( $this->data, $meta_data );
         }
+
+        if( empty( $this->data ) )
+            $this->GenerateData();
 
         if( file_exists( $this->directory . DIRECTORY_SEPARATOR . $this->template ) )
         {
