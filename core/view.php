@@ -192,9 +192,9 @@ class HercView extends HercAbstract
 
                 $this->data = array_merge( $this->data, $meta_data );
             }
-        }
 
-        $this->posts_data_generated = $post->ID;
+            $this->posts_data_generated = $post->ID;
+        }
     }
 
     function AddOptionsPage()
