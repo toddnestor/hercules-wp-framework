@@ -25,8 +25,12 @@ class HercView extends HercAbstract
                 $slug = property_exists( $this, 'model' ) && !empty( $this->model ) ? $this->Model( $this->model )->CurrentSlug() : $this->CurrentSlug();
                 $meta_data = $this->Model( $slug )->GetMeta($data->ID);
             }
+            else
+            {
+                $meta_data = array();
+            }
 
-            if( !array( $meta_data ) )
+            if( !is_array( $meta_data ) )
                 $meta_data = array( $meta_data );
 
             if( empty( $meta_data ) )
