@@ -42,6 +42,9 @@ class HercView extends HercAbstract
         if( empty( $this->data ) )
             $this->GenerateData();
 
+        if( !empty( $data ) && is_array( $data ) )
+            $this->data = array_merge( $this->data, $data );
+
         if( file_exists( $this->directory . DIRECTORY_SEPARATOR . $this->template ) )
         {
             $template = file_get_contents( $this->directory . DIRECTORY_SEPARATOR . $this->template );
