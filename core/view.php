@@ -49,11 +49,14 @@ class HercView extends HercAbstract
             $template = $this->Helper( 'handlebars' )
                 ->Render( $template, ( !empty( $this->data ) ? $this->data : array() ) );
 
-            $template = preg_replace_callback(
-                '`name="([^"]*)"`',
-                array( $this, 'AddClassNameToPostNames' ),
-                $template
-            );
+            if( !property_exists( $this, 'dynamic_names' ) || $this->dynamic_names == true )
+            {
+                $template = preg_replace_callback(
+                    '`name="([^"]*)"`',
+                    array($this, 'AddClassNameToPostNames'),
+                    $template
+                );
+            }
 
             if( !$return )
                 echo $template;
