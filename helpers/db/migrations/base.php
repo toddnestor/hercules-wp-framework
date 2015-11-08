@@ -40,9 +40,19 @@ class BaseMigration
 
         $migration = $this;
 
-        Capsule::schema()->create($this->table_name, function(Blueprint $table) use ($migration){
-            $migration->Migration($table);
-        } );
+        if( method_exists( $this, 'Migration' ) )
+        {
+            Capsule::schema()->create($this->table_name, function (Blueprint $table) use ($migration)
+            {
+                $migration->Migration($table);
+            });
+        }
+        elseif( method_exists( $this, 'Alteration' ) )
+        {
+            Capsule::schema()->table($this->table_name, function (Blueprint $table) use ($migration){
+                $migration->Alteration($table);
+            });
+        }
     }
 
 
